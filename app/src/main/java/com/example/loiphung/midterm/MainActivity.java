@@ -18,20 +18,23 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
+
+
+
     String URL, state, city;
     public static Weather thisWeather = new Weather();
     public static ArrayList<City> cityArrayList = new ArrayList<City>();
 
+    public static String urlC = "";
+
     //http://autocomplete.wunderground.com/aq?query=query
-
-
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
 
-        final EditText cityField = findViewById(R.id.cityEditText);
+
 
 
 
@@ -47,45 +50,37 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                ListView cityListView = findViewById(R.id.city_listView);
                 EditText cityField = findViewById(R.id.cityEditText);
                 String search = cityField.getText().toString();
-                final ListView cityListView = findViewById(R.id.city_listView);
-
                 new GetCityAsync(MainActivity.this, cityListView).execute("http://autocomplete.wunderground.com/aq?query=" + search);
-
                 CustomCityAdapter adapter = new CustomCityAdapter(MainActivity.this, R.layout.city_item, cityArrayList);
                 cityListView.setAdapter(adapter);
 
 
-                cityListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            }
+        });
 
-                        String url, zmw = "";
+        final ListView cityListView = findViewById(R.id.city_listView);
+        cityListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                        zmw = cityArrayList.get(position).getZmw();
-                        if(zmw == ""){
-                            zmw = "33951.3.99999";
-                        }
+                String zmw = "";
+                zmw = cityArrayList.get(position).getZmw();
+                if(zmw == ""){
+                    zmw = "33951.3.99999";
+                }
+                urlC = ("http://api.wunderground.com/api/f6a53adc699e9f99/conditions/q/zmw:"+ zmw + ".json");
 
-                        url = ("http://api.wunderground.com/api/f6a53adc699e9f99/conditions/q/zmw:"+ zmw + ".json");
-
-
-                        new GetDataAsync(MainActivity.this).execute(url);
-
-
-
-                        Log.d("Weather", thisWeather.getDescription());
-
-                        TextView tv = findViewById(R.id.description);
+                new GetDataAsync(MainActivity.this).execute(urlC);
 
 
-                        startActivity(new Intent(MainActivity.this, WeatherDetailActivity.class));
+                Log.d("Item clicked Position ", position + " :" + thisWeather.toString() );
 
+                Intent i = new Intent(MainActivity.this, WeatherDetailActivity.class);
 
-
-                    }
-                });
+                startActivity(i);
 
 
 

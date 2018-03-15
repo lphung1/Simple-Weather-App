@@ -24,7 +24,7 @@ import java.util.ArrayList;
  * Created by LoiPhung on 2/26/18.
  */
 
-public class GetDataAsync extends AsyncTask<String, Integer, Weather> {
+public class GetDataAsync extends AsyncTask<String, Integer, ArrayList<Weather> > {
 
     private ProgressDialog dialog;
     AlertDialog alert;
@@ -49,10 +49,12 @@ public class GetDataAsync extends AsyncTask<String, Integer, Weather> {
     }
 
     @Override
-    protected Weather doInBackground(String... params) {
+    protected ArrayList<Weather>  doInBackground(String... params) {
 
         HttpURLConnection connection = null;
+        ArrayList<Weather> arraylist = new ArrayList<Weather>();
         Weather a = new Weather();
+
 
         try {
             URL url = new URL(params[0]);
@@ -64,27 +66,30 @@ public class GetDataAsync extends AsyncTask<String, Integer, Weather> {
 
                 JSONObject root = new JSONObject(json);
 
-                    JSONObject weatherJsonObject = root.optJSONObject("conditions");
-                    JSONObject sourceJsonObject = weatherJsonObject.optJSONObject("current_observations");
+                JSONObject weatherJsonObject = root.optJSONObject("current_observation");
 
 
-                a.setTemp_f(sourceJsonObject.optString("temp_f"));
-                a.setWindGust(sourceJsonObject.optString("wind_gust_mph"));
-                a.setWeather(sourceJsonObject.optString("weather"));
-                a.setFeelslike_f(sourceJsonObject.optString("feelslike_f"));
-                a.setIconUrl(sourceJsonObject.optString("icon_url"));
-                a.setRelativeHumidity(sourceJsonObject.optString("relative_humidity"));
+                a.setTemp_f(weatherJsonObject.optString("temp_f"));
+                a.setWindGust(weatherJsonObject.optString("wind_gust_mph"));
+                a.setWeather(weatherJsonObject.optString("weather"));
+                a.setFeelslike_f(weatherJsonObject.optString("feelslike_f"));
+                a.setIconUrl(weatherJsonObject.optString("icon_url"));
+                a.setRelativeHumidity(weatherJsonObject.optString("relative_humidity"));
+                a.setObservationTime(weatherJsonObject.optString("observation_time"));
+                a.setVisibilityMi("visibility");
 
 
 
+                Log.d("Async weather", " ." + weatherJsonObject.optString("weather"));
+                //Log.d("Source", " ." + sourceJsonObject.optString("weather"));
+                Log.d("Async tempf" , a.getTemp_f());
+                Log.d("Async feels Like" , a.getFeelslike_f());
+                Log.d("Async URL Icon" , a.getIconUrl());
+                Log.d("Async relative Humdity" , a.getRelativeHumidity());
 
-                Log.d("tempf" , a.getTemp_f());
-                Log.d("feels Like" , a.getFeelslike_f());
-                Log.d("URL Icon" , a.getIconUrl());
-                Log.d("relative Humdity" , a.getRelativeHumidity());
+                WeatherDetailActivity.weatherArrayList.add(a);
+                arraylist.add(a);
 
-
-                    return a;
 
             }
         } catch (Exception e) {
@@ -93,19 +98,13 @@ public class GetDataAsync extends AsyncTask<String, Integer, Weather> {
             //Close the connections
         }
 
-        return a;
+
+        return arraylist;
     }
 
-    @Override
-    protected void onProgressUpdate(Integer... values) {
-        super.onProgressUpdate(values);
-
-        pb.setProgress(values[0]);
 
 
-    }
-
-    protected void onPostExecute(Weather result) {
+    protected void onPostExecute(ArrayList<Weather>  result) {
 
         /*if (pb.getProgress() != pb.getMax()) {
             try {
@@ -123,7 +122,14 @@ public class GetDataAsync extends AsyncTask<String, Integer, Weather> {
         Log.d("result", ""+ result);
         Log.d("articleArrayList", " "+ MainActivity.articlesArrayList);*/
 
-        MainActivity.thisWeather = result;
+        WeatherDetailActivity.weatherArrayList = result;
+        Log.d("result", ""+ result);
+        Log.d("result size", ""+ result.size());
+
+
+        Log.d("articleArrayList", " "+ WeatherDetailActivity.weatherArrayList.get(0).getWeather());
+        Log.d("articleArrayList size", " "+ WeatherDetailActivity.weatherArrayList.size());
+
 
 
     }
