@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("Item clicked Position ", position + " :" + thisWeather.toString() );
 
                 Intent i = new Intent(MainActivity.this, WeatherDetailActivity.class);
-
+                i.putExtra("i", position);
                 startActivity(i);
 
 

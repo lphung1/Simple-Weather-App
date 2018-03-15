@@ -72,7 +72,7 @@ public class GetDataAsync extends AsyncTask<String, Integer, ArrayList<Weather> 
                 a.setTemp_f(weatherJsonObject.optString("temp_f"));
                 a.setWindGust(weatherJsonObject.optString("wind_gust_mph"));
                 a.setWeather(weatherJsonObject.optString("weather"));
-                a.setFeelslike_f(weatherJsonObject.optString("feelslike_f"));
+                a.setFeelslike_f(weatherJsonObject.optString("feelslike_string"));
                 a.setIconUrl(weatherJsonObject.optString("icon_url"));
                 a.setRelativeHumidity(weatherJsonObject.optString("relative_humidity"));
                 a.setObservationTime(weatherJsonObject.optString("observation_time"));
@@ -106,28 +106,14 @@ public class GetDataAsync extends AsyncTask<String, Integer, ArrayList<Weather> 
 
     protected void onPostExecute(ArrayList<Weather>  result) {
 
-        /*if (pb.getProgress() != pb.getMax()) {
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            pb.setProgress(pb.getMax());
-        }
-
-        MainActivity.articlesArrayList = result;
-        CustomArticleAdapter adapter = new CustomArticleAdapter(context, R.layout.article_row, result);
-        listview.setAdapter(adapter);
-
-        Log.d("result", ""+ result);
-        Log.d("articleArrayList", " "+ MainActivity.articlesArrayList);*/
 
         WeatherDetailActivity.weatherArrayList = result;
+
         Log.d("result", ""+ result);
         Log.d("result size", ""+ result.size());
 
 
-        Log.d("articleArrayList", " "+ WeatherDetailActivity.weatherArrayList.get(0).getWeather());
+        //Log.d("articleArrayList", " "+ WeatherDetailActivity.weatherArrayList.get(0).getWeather());
         Log.d("articleArrayList size", " "+ WeatherDetailActivity.weatherArrayList.size());
 
 

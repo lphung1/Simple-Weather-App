@@ -40,7 +40,7 @@ public class City {
     }
 
     public String toString(){
-        return (city + " , "+ "\n" + country );
+        return (city + "\n" + country );
     }
 
     public String getZmw() {
